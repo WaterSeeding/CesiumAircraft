@@ -1,4 +1,6 @@
+import "cesium/Build/Cesium/Widgets/widgets.css";
+import "./app.css";
+
 import { Viewer } from "cesium";
-import "./app.css"
 
 const viewer = new Viewer('cesium-container');
