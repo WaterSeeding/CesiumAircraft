@@ -1,23 +1,6 @@
 {
   "name": "cesiumjs-webpack-example",
   "version": "1.0.0",
-  "description": "The minimal recomended setup for an app using Cesium with Webpack.",
-  "homepage": "https://cesium.com/platform/cesiumjs/",
-  "license": "Apache-2.0",
-  "author": {
-    "name": "Cesium GS, Inc.",
-    "url": "https://cesium.com"
-  },
-  "keywords": [
-    "cesium",
-    "CesiumJS",
-    "webpack",
-    "example"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CesiumGS/cesium-webpack-example.git"
-  },
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",

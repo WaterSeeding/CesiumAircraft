@@ -1,15 +1,14 @@
-// The path to the CesiumJS source code
 const cesiumSource = 'node_modules/cesium/Source';
 const cesiumWorkers = '../Build/Cesium/Workers';
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     context: __dirname,
     entry: {
-        app: './src/index.js'
+        app: './src/app.js'
     },
     output: {
         filename: 'app.js',
@@ -18,7 +17,7 @@ module.exports = {
     },
     resolve: {
         fallback: { "https": false, "zlib": false, "http": false, "url": false },
-        mainFiles: ['index', 'Cesium']
+        mainFiles: ['app', 'Cesium']
     },
     module: {
         rules: [{
@@ -31,7 +30,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            template: 'src/app.html'
         }),
         // Copy Cesium Assets, Widgets, and Workers to a static directory
         new CopyWebpackPlugin({
@@ -43,8 +42,7 @@ module.exports = {
             ]
         }),
         new webpack.DefinePlugin({
-            // Define relative base path in cesium for loading assets
-            CESIUM_BASE_URL: JSON.stringify('')
+            CESIUM_BASE_URL: JSON.stringify('') // Define relative base path in cesium for loading assets
         })
     ],
     mode: 'development',
