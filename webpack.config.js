@@ -8,7 +8,7 @@ const webpack = require('webpack');
 module.exports = {
     context: __dirname,
     entry: {
-        app: './src/app.js'
+        app: './src/app.ts'
     },
     output: {
         filename: 'app.js',
@@ -17,7 +17,8 @@ module.exports = {
     },
     resolve: {
         fallback: { "https": false, "zlib": false, "http": false, "url": false },
-        mainFiles: ['app', 'Cesium']
+        mainFiles: ['app', 'Cesium'],
+        extensions: ['.ts', '.js']
     },
     module: {
         rules: [{
@@ -26,6 +27,10 @@ module.exports = {
         }, {
             test: /\.(png|gif|jpg|jpeg|svg|xml|json)$/,
             use: [ 'url-loader' ]
+        }, {
+            test: /\.tsx?$/,
+            use: 'ts-loader',
+            exclude: /node_modules/
         }]
     },
     plugins: [
