@@ -1,3 +1,3 @@
-# cesium-ts
+# A Cesium Aircraft display
 
 ---
