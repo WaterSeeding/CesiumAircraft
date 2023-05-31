@@ -38,6 +38,11 @@ module.exports = {
     ],
   },
   devServer: {
+    // 设置服务入口，localhost:9000就可以直接访问public和dist里面的资源文件了
+    // contentBase: [
+    //   path.resolve(__dirname, "public"),
+    //   path.resolve(__dirname, "dist"),
+    // ],
     open: true,
     compress: true, // 压缩
     host: "0.0.0.0", // 设置局域网访问
@@ -54,6 +59,12 @@ module.exports = {
         { from: path.join(cesiumSource, "Assets"), to: "Assets" },
         { from: path.join(cesiumSource, "Widgets"), to: "Widgets" },
         { from: path.join(cesiumSource, "ThirdParty"), to: "ThirdParty" },
+        {
+          // 从public中复制文件
+          from: path.resolve(__dirname, "public"),
+          // 把复制的文件存放到dis里面
+          to: path.resolve(__dirname, "dist"),
+        },
       ],
     }),
     new webpack.DefinePlugin({
