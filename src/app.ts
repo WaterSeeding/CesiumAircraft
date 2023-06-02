@@ -2,7 +2,7 @@ import "./app.css";
 import * as Cesium from "cesium";
 import * as dat from "dat.gui";
 import { viewer } from "./main";
-import { createModel, flyModel } from "./model";
+import { createModel, flyModel, changeModel } from "./model";
 
 let targetRef: any = {
   getValue: (): any => {
@@ -10,24 +10,23 @@ let targetRef: any = {
   },
 };
 
-const gui = new dat.GUI({ name: "Cesium GUI", autoPlace: true });
+const gui = new dat.GUI({ name: "Cesium GUI", width: 450, autoPlace: true });
 gui.domElement.id = "gui";
 
 let guiParams: { [key: string]: any } = {
-  type: "cesium",
   show: true,
+  scale: 1.0,
+  maximumScale: 256,
+  minimumPixelSize: 0.0,
   runAnimations: true,
+  clampAnimations: true,
+  shadows: Cesium.ShadowMode.ENABLED,
+  silhouetteSize: 0.0,
+  silhouetteColor: "#0000ff",
+  color: "#ffffff",
+  colorBlendMode: Cesium.ColorBlendMode.HIGHLIGHT,
+  colorBlendAmount: 0.5,
 };
-
-let listenShow = gui.add(guiParams, "show");
-listenShow.onChange(() => {
-  changeModel(guiParams, targetRef);
-});
-
-let runAnimationsShow = gui.add(guiParams, "runAnimations");
-runAnimationsShow.onChange(() => {
-  changeModel(guiParams, targetRef);
-});
 
 guiParams["Add a Cesium_Air"] = () => {
   let modelEntity = targetRef.getValue();
@@ -53,11 +52,73 @@ guiParams["Fly to Cesium_Air"] = () => {
 gui.add(guiParams, "Add a Cesium_Air");
 gui.add(guiParams, "Fly to Cesium_Air");
 
-const changeModel = (guiParams: any, targetRef: any) => {
-  let modelEntity = targetRef.getValue() as Cesium.Entity;
-  if (modelEntity) {
-    let modelGraphics = modelEntity.model;
-    modelGraphics.show = guiParams.show;
-    modelGraphics.runAnimations = guiParams.runAnimations;
-  }
-};
+let listen_show = gui.add(guiParams, "show");
+listen_show.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_scale = gui
+  .add(guiParams, "scale")
+  .min(1)
+  .max(guiParams.maximumScale)
+  .step(1);
+listen_scale.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_runAnimations = gui.add(guiParams, "runAnimations");
+listen_runAnimations.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_clampAnimations = gui.add(guiParams, "clampAnimations");
+listen_clampAnimations.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_shadows = gui.add(guiParams, "shadows", {
+  "Cesium.ShadowMode.DISABLED": Cesium.ShadowMode.DISABLED,
+  "Cesium.ShadowMode.ENABLED": Cesium.ShadowMode.ENABLED,
+  "Cesium.ShadowMode.CAST_ONLY": Cesium.ShadowMode.CAST_ONLY,
+  "Cesium.ShadowMode.RECEIVE_ONLY": Cesium.ShadowMode.RECEIVE_ONLY,
+});
+listen_shadows.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_silhouetteSize = gui
+  .add(guiParams, "silhouetteSize")
+  .min(0)
+  .max(10)
+  .step(0.1);
+listen_silhouetteSize.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_silhouetteColor = gui.addColor(guiParams, "silhouetteColor");
+listen_silhouetteColor.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_color = gui.addColor(guiParams, "color");
+listen_color.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_colorBlendMode = gui.add(guiParams, "colorBlendMode", {
+  "Cesium.ColorBlendMode.HIGHLIGHT": Cesium.ColorBlendMode.HIGHLIGHT,
+  "Cesium.ColorBlendMode.REPLACE": Cesium.ColorBlendMode.REPLACE,
+  "Cesium.ColorBlendMode.MIX": Cesium.ColorBlendMode.MIX,
+});
+listen_colorBlendMode.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_colorBlendAmount = gui
+  .add(guiParams, "colorBlendAmount")
+  .min(0)
+  .max(1.0)
+  .step(0.1);
+listen_colorBlendAmount.onChange(() => {
+  changeModel(guiParams, targetRef);
+});

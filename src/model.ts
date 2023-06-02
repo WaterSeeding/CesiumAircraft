@@ -29,8 +29,23 @@ export const createModel = (
     model: {
       show: guiParams.show,
       uri: url,
-      scale: 1,
-      minimumPixelSize: 128,
+      scale: guiParams.scale,
+      maximumScale: guiParams.maximumScale,
+      minimumPixelSize: guiParams.minimumPixelSize,
+      runAnimations: guiParams.runAnimations,
+      clampAnimations: guiParams.clampAnimations,
+      shadows: new Cesium.ConstantProperty(Number(guiParams.shadows)),
+      silhouetteSize: guiParams.silhouetteSize,
+      silhouetteColor: new Cesium.ConstantProperty(
+        Cesium.Color.fromCssColorString(guiParams.silhouetteColor)
+      ),
+      color: new Cesium.ConstantProperty(
+        Cesium.Color.fromCssColorString(guiParams.color)
+      ),
+      colorBlendMode: new Cesium.ConstantProperty(
+        Number(guiParams.colorBlendMode)
+      ),
+      colorBlendAmount: guiParams.colorBlendAmount,
     },
   });
   targetRef.getValue = () => {
@@ -53,13 +68,36 @@ export const flyModel = (
     offset: headingPitchRange,
   });
   flyResultPromise
-    .then((response: any) => {
-      console.log("Success:", response);
+    .then(() => {
+      viewer.trackedEntity = targetEntity;
     })
-    .then((response: any) => {
-      console.log("Success:", response);
-    })
-    .catch(function (error) {
-      console.error("Error:", error);
-    });
+    .catch(() => {});
+};
+
+export const changeModel = (guiParams: any, targetRef: any) => {
+  let modelEntity = targetRef.getValue() as Cesium.Entity;
+  if (modelEntity) {
+    console.log("guiParams", guiParams);
+    let modelGraphics = modelEntity.model;
+    modelGraphics.show = guiParams.show;
+    modelGraphics.scale = guiParams.scale;
+    modelGraphics.maximumScale = guiParams.maximumScale;
+    modelGraphics.minimumPixelSize = guiParams.minimumPixelSize;
+    modelGraphics.runAnimations = guiParams.runAnimations;
+    modelGraphics.clampAnimations = guiParams.clampAnimations;
+    modelGraphics.shadows = new Cesium.ConstantProperty(
+      Number(guiParams.shadows)
+    );
+    modelGraphics.silhouetteSize = guiParams.silhouetteSize;
+    modelGraphics.silhouetteColor = new Cesium.ConstantProperty(
+      Cesium.Color.fromCssColorString(guiParams.silhouetteColor)
+    );
+    modelGraphics.color = new Cesium.ConstantProperty(
+      Cesium.Color.fromCssColorString(guiParams.color)
+    );
+    modelGraphics.colorBlendMode = new Cesium.ConstantProperty(
+      Number(guiParams.colorBlendMode)
+    );
+    modelGraphics.colorBlendAmount = guiParams.colorBlendAmount;
+  }
 };
