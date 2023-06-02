@@ -1,71 +1,63 @@
 import "./app.css";
 import * as Cesium from "cesium";
-import { viewer } from "./main";
 import * as dat from "dat.gui";
+import { viewer } from "./main";
+import { createModel, flyModel } from "./model";
+
+let targetRef: any = {
+  getValue: (): any => {
+    return null;
+  },
+};
 
 const gui = new dat.GUI({ name: "Cesium GUI", autoPlace: true });
 gui.domElement.id = "gui";
 
-let guiTarget: { [key: string]: any } = {
+let guiParams: { [key: string]: any } = {
   type: "cesium",
+  show: true,
+  runAnimations: true,
 };
 
-guiTarget["Add a Cesium_Air Model"] = () => {
-  createModel("./static/CesiumAir/Cesium_Air.glb", 5000.0);
+let listenShow = gui.add(guiParams, "show");
+listenShow.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let runAnimationsShow = gui.add(guiParams, "runAnimations");
+runAnimationsShow.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+guiParams["Add a Cesium_Air"] = () => {
+  let modelEntity = targetRef.getValue();
+  if (modelEntity) {
+    viewer.entities.removeAll();
+  }
+  createModel(
+    viewer,
+    "./static/CesiumAir/Cesium_Air.glb",
+    5000.0,
+    guiParams,
+    targetRef
+  );
 };
 
-gui.add(guiTarget, "Add a Cesium_Air Model");
-
-const createModel = (url: string, height: number) => {
-  viewer.entities.removeAll();
-
-  const position = Cesium.Cartesian3.fromDegrees(
-    -123.0744619,
-    44.0503706,
-    height
-  );
-  const heading = Cesium.Math.toRadians(135);
-  const pitch = 0;
-  const roll = 0;
-  const hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
-  const orientation = Cesium.Transforms.headingPitchRollQuaternion(
-    position,
-    hpr
-  );
-  const orientationProperty = new Cesium.ConstantProperty(orientation);
-
-  const entity = viewer.entities.add({
-    name: url,
-    position: position,
-    orientation: orientationProperty,
-    model: {
-      uri: url,
-      scale: 1,
-      minimumPixelSize: 128,
-    },
-  });
-  flytoEntity(viewer, entity);
+guiParams["Fly to Cesium_Air"] = () => {
+  let modelEntity = targetRef.getValue();
+  if (modelEntity) {
+    flyModel(viewer, modelEntity);
+  }
 };
 
-const flytoEntity = (viewer: Cesium.Viewer, targetEntity: Cesium.Entity) => {
-  let headingPitchRange = new Cesium.HeadingPitchRange(
-    Cesium.Math.toRadians(0),
-    Cesium.Math.toRadians(-45),
-    100
-  );
-  // 视角定位
-  let flyResultPromise = viewer.flyTo(targetEntity, {
-    duration: 3,
-    offset: headingPitchRange,
-  });
-  flyResultPromise
-    .then((response: any) => {
-      console.log("Success:", response);
-    })
-    .then((response: any) => {
-      console.log("Success:", response);
-    })
-    .catch(function (error) {
-      console.error("Error:", error);
-    });
+gui.add(guiParams, "Add a Cesium_Air");
+gui.add(guiParams, "Fly to Cesium_Air");
+
+const changeModel = (guiParams: any, targetRef: any) => {
+  let modelEntity = targetRef.getValue() as Cesium.Entity;
+  if (modelEntity) {
+    let modelGraphics = modelEntity.model;
+    modelGraphics.show = guiParams.show;
+    modelGraphics.runAnimations = guiParams.runAnimations;
+  }
 };
