@@ -40,9 +40,32 @@ const createModel = (url: string, height: number) => {
     orientation: orientationProperty,
     model: {
       uri: url,
+      scale: 1,
       minimumPixelSize: 128,
-      maximumScale: 20000,
     },
   });
-  viewer.trackedEntity = entity;
+  flytoEntity(viewer, entity);
+};
+
+const flytoEntity = (viewer: Cesium.Viewer, targetEntity: Cesium.Entity) => {
+  let headingPitchRange = new Cesium.HeadingPitchRange(
+    Cesium.Math.toRadians(0),
+    Cesium.Math.toRadians(-45),
+    100
+  );
+  // 视角定位
+  let flyResultPromise = viewer.flyTo(targetEntity, {
+    duration: 3,
+    offset: headingPitchRange,
+  });
+  flyResultPromise
+    .then((response: any) => {
+      console.log("Success:", response);
+    })
+    .then((response: any) => {
+      console.log("Success:", response);
+    })
+    .catch(function (error) {
+      console.error("Error:", error);
+    });
 };
