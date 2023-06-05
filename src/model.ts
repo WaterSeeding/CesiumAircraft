@@ -22,6 +22,7 @@ export const createModel = (
   );
   const orientationProperty = new Cesium.ConstantProperty(orientation);
 
+  // console.log("guiParams", guiParams);
   let modelEntity = viewer.entities.add({
     name: url,
     position: position,
@@ -32,6 +33,7 @@ export const createModel = (
       scale: guiParams.scale,
       maximumScale: guiParams.maximumScale,
       minimumPixelSize: guiParams.minimumPixelSize,
+      incrementallyLoadTextures: guiParams.incrementallyLoadTextures,
       runAnimations: guiParams.runAnimations,
       clampAnimations: guiParams.clampAnimations,
       shadows: new Cesium.ConstantProperty(Number(guiParams.shadows)),
@@ -46,6 +48,15 @@ export const createModel = (
         Number(guiParams.colorBlendMode)
       ),
       colorBlendAmount: guiParams.colorBlendAmount,
+      imageBasedLightingFactor: new Cesium.ConstantProperty(
+        new Cesium.Cartesian2(
+          guiParams.imageBasedLightingFactor_x,
+          guiParams.imageBasedLightingFactor_y
+        )
+      ),
+      // lightColor: new Cesium.ConstantProperty(
+      //   Cesium.Color.fromCssColorString(guiParams.lightColor)
+      // ),
     },
   });
   targetRef.getValue = () => {
@@ -76,13 +87,15 @@ export const flyModel = (
 
 export const changeModel = (guiParams: any, targetRef: any) => {
   let modelEntity = targetRef.getValue() as Cesium.Entity;
+  // console.log("guiParams", guiParams);
   if (modelEntity) {
-    console.log("guiParams", guiParams);
     let modelGraphics = modelEntity.model;
     modelGraphics.show = guiParams.show;
     modelGraphics.scale = guiParams.scale;
     modelGraphics.maximumScale = guiParams.maximumScale;
     modelGraphics.minimumPixelSize = guiParams.minimumPixelSize;
+    modelGraphics.incrementallyLoadTextures =
+      guiParams.incrementallyLoadTextures;
     modelGraphics.runAnimations = guiParams.runAnimations;
     modelGraphics.clampAnimations = guiParams.clampAnimations;
     modelGraphics.shadows = new Cesium.ConstantProperty(
@@ -99,5 +112,14 @@ export const changeModel = (guiParams: any, targetRef: any) => {
       Number(guiParams.colorBlendMode)
     );
     modelGraphics.colorBlendAmount = guiParams.colorBlendAmount;
+    modelGraphics.imageBasedLightingFactor = new Cesium.ConstantProperty(
+      new Cesium.Cartesian2(
+        guiParams.imageBasedLightingFactor_x,
+        guiParams.imageBasedLightingFactor_y
+      )
+    );
+    // modelGraphics.lightColor = new Cesium.ConstantProperty(
+    //   Cesium.Color.fromCssColorString(guiParams.lightColor)
+    // );
   }
 };

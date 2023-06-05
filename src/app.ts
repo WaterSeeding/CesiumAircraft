@@ -18,6 +18,7 @@ let guiParams: { [key: string]: any } = {
   scale: 1.0,
   maximumScale: 256,
   minimumPixelSize: 0.0,
+  incrementallyLoadTextures: false,
   runAnimations: true,
   clampAnimations: true,
   shadows: Cesium.ShadowMode.ENABLED,
@@ -26,6 +27,9 @@ let guiParams: { [key: string]: any } = {
   color: "#ffffff",
   colorBlendMode: Cesium.ColorBlendMode.HIGHLIGHT,
   colorBlendAmount: 0.5,
+  imageBasedLightingFactor_x: 1.0,
+  imageBasedLightingFactor_y: 1.0,
+  lightColor: "#ffffff",
 };
 
 guiParams["Add a Cesium_Air"] = () => {
@@ -63,6 +67,14 @@ let listen_scale = gui
   .max(guiParams.maximumScale)
   .step(1);
 listen_scale.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_incrementallyLoadTextures = gui.add(
+  guiParams,
+  "incrementallyLoadTextures"
+);
+listen_incrementallyLoadTextures.onChange(() => {
   changeModel(guiParams, targetRef);
 });
 
@@ -120,5 +132,28 @@ let listen_colorBlendAmount = gui
   .max(1.0)
   .step(0.1);
 listen_colorBlendAmount.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let imageBasedLightingFactor_folder = gui.addFolder("imageBasedLightingFactor");
+let listen_imageBasedLightingFactor_x = imageBasedLightingFactor_folder
+  .add(guiParams, "imageBasedLightingFactor_x")
+  .min(0)
+  .max(1.0)
+  .step(0.1);
+listen_imageBasedLightingFactor_x.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+let listen_imageBasedLightingFactor_y = imageBasedLightingFactor_folder
+  .add(guiParams, "imageBasedLightingFactor_y")
+  .min(0)
+  .max(1.0)
+  .step(0.1);
+listen_imageBasedLightingFactor_y.onChange(() => {
+  changeModel(guiParams, targetRef);
+});
+
+let listen_lightColor = gui.addColor(guiParams, "lightColor");
+listen_lightColor.onChange(() => {
   changeModel(guiParams, targetRef);
 });
